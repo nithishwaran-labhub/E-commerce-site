@@ -1,1 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wishlist - Mini E-Commerce</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+    <h1>Mini E-Commerce Store</h1>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="wishlist.html">Wishlist (<span id="wishlist-count">0</span>)</a>
+        <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+    </nav>
+</header>
+
+<main>
+    <section class="products" id="wishlist-list">
+        <!-- Wishlist items will appear here -->
+    </section>
+</main>
+
+<script src="script.js"></script>
+<script>
+displayWishlist();
+updateCounts();
+</script>
+</body>
+</html>
 
