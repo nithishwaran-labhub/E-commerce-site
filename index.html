@@ -1,26 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mini E-Commerce</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini E-Commerce Store</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Mini E-Commerce Store</h1>
-        <nav>
-            <button id="cart-btn">Cart (<span id="cart-count">0</span>)</button>
-        </nav>
-    </header>
+<header>
+    <h1>Mini E-Commerce Store</h1>
+    <nav>
+        <a href="wishlist.html">Wishlist (<span id="wishlist-count">0</span>)</a>
+        <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+    </nav>
+</header>
 
-    <main>
-        <section class="products" id="product-list">
-            <!-- Products will be added dynamically by JS -->
-        </section>
-    </main>
+<main>
+    <section class="products" id="product-list">
+        <!-- Products will be added dynamically -->
+    </section>
+</main>
 
-    <script src="script.js"></script>
+<script src="script.js"></script>
+<script>
+displayProducts();
+updateCounts();
+</script>
 </body>
 </html>
-
