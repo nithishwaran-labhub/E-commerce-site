@@ -5,80 +5,149 @@ let products = [
     { id: 3, name: "Bag", price: 799, img: "products/item3.jpg" },
 ];
 
-// ===== Cart & Wishlist =====
-let cart = [];
-let wishlist = [];
+// ===== Cart & Wishlist using localStorage =====
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
 
 // ===== DOM Elements =====
 const productList = document.getElementById("product-list");
-const cartCount = document.getElementById("cart-count");
-const wishlistCount = document.getElementById("wishlist-count");
+const cartList = document.getElementById("cart-list");
+const wishlistList = document.getElementById("wishlist-list");
+const cartCountEl = document.getElementById("cart-count");
+const wishlistCountEl = document.getElementById("wishlist-count");
 
-// ===== Display Products =====
+// ===== Display Products on Home Page =====
 function displayProducts() {
+    if (!productList) return;
     productList.innerHTML = "";
     products.forEach(product => {
-        let productCard = document.createElement("div");
-        productCard.className = "product-card";
-        productCard.innerHTML = `
+        let card = document.createElement("div");
+        card.className = "product-card";
+        card.innerHTML = `
             <img src="${product.img}" alt="${product.name}">
             <h3>${product.name}</h3>
             <p>₹${product.price}</p>
             <button onclick="addToCart(${product.id})">Add to Cart</button>
             <button onclick="addToWishlist(${product.id})">Add to Wishlist</button>
         `;
-        productList.appendChild(productCard);
+        productList.appendChild(card);
     });
 }
 
 // ===== Add to Cart =====
 function addToCart(id) {
     let product = products.find(p => p.id === id);
-
-    // Prevent duplicate in cart
-    if (!cart.includes(product)) {
-        cart.push(product);
-        cartCount.textContent = cart.length;
+    if (!cart.find(p => p.id === id)) {
+        cart.push({...product, quantity: 1});
+        saveCart();
+        updateCounts();
         alert(`${product.name} added to Cart!`);
     } else {
-        alert(`${product.name} is already in your Cart.`);
+        alert(`${product.name} is already in Cart`);
     }
 }
 
 // ===== Add to Wishlist =====
 function addToWishlist(id) {
     let product = products.find(p => p.id === id);
-
-    // Prevent duplicate in wishlist
-    if (!wishlist.includes(product)) {
+    if (!wishlist.find(p => p.id === id)) {
         wishlist.push(product);
-        wishlistCount.textContent = wishlist.length;
+        saveWishlist();
+        updateCounts();
         alert(`${product.name} added to Wishlist!`);
     } else {
-        alert(`${product.name} is already in your Wishlist.`);
+        alert(`${product.name} is already in Wishlist`);
     }
 }
 
-// ===== View Cart =====
-document.getElementById("cart-btn").onclick = () => {
-    if (cart.length === 0) {
-        alert("Your cart is empty!");
-    } else {
-        let list = cart.map(p => `${p.name} - ₹${p.price}`).join("\n");
-        alert("Your Cart:\n" + list);
+// ===== Display Cart Page =====
+function displayCart() {
+    if (!cartList) return;
+    cartList.innerHTML = "";
+    if(cart.length === 0) {
+        cartList.innerHTML = "<p>Your cart is empty</p>";
+        return;
     }
-};
+    cart.forEach((p, index) => {
+        let card = document.createElement("div");
+        card.className = "product-card";
+        card.innerHTML = `
+            <img src="${p.img}" alt="${p.name}">
+            <h3>${p.name}</h3>
+            <p>₹${p.price} x ${p.quantity}</p>
+            <button onclick="removeFromCart(${index})">Remove</button>
+            <button onclick="increaseQuantity(${index})">+</button>
+            <button onclick="decreaseQuantity(${index})">-</button>
+        `;
+        cartList.appendChild(card);
+    });
+}
 
-// ===== View Wishlist =====
-document.getElementById("wishlist-btn").onclick = () => {
-    if (wishlist.length === 0) {
-        alert("Your wishlist is empty!");
-    } else {
-        let list = wishlist.map(p => `${p.name} - ₹${p.price}`).join("\n");
-        alert("Your Wishlist:\n" + list);
+// ===== Display Wishlist Page =====
+function displayWishlist() {
+    if (!wishlistList) return;
+    wishlistList.innerHTML = "";
+    if(wishlist.length === 0) {
+        wishlistList.innerHTML = "<p>Your wishlist is empty</p>";
+        return;
     }
-};
+    wishlist.forEach((p, index) => {
+        let card = document.createElement("div");
+        card.className = "product-card";
+        card.innerHTML = `
+            <img src="${p.img}" alt="${p.name}">
+            <h3>${p.name}</h3>
+            <p>₹${p.price}</p>
+            <button onclick="removeFromWishlist(${index})">Remove</button>
+        `;
+        wishlistList.appendChild(card);
+    });
+}
 
-// ===== Initialize =====
-displayProducts();
+// ===== Cart Quantity Functions =====
+function increaseQuantity(index) {
+    cart[index].quantity +=1;
+    saveCart();
+    displayCart();
+    updateCounts();
+}
+function decreaseQuantity(index) {
+    if(cart[index].quantity > 1){
+        cart[index].quantity -=1;
+    } else {
+        cart.splice(index,1);
+    }
+    saveCart();
+    displayCart();
+    updateCounts();
+}
+
+// ===== Remove Functions =====
+function removeFromCart(index) {
+    cart.splice(index,1);
+    saveCart();
+    displayCart();
+    updateCounts();
+}
+function removeFromWishlist(index) {
+    wishlist.splice(index,1);
+    saveWishlist();
+    displayWishlist();
+    updateCounts();
+}
+
+// ===== Save to Local Storage =====
+function saveCart() {
+    localStorage.setItem('cart', JSON.stringify(cart));
+}
+function saveWishlist() {
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+}
+
+// ===== Update Header Counts =====
+function updateCounts() {
+    if(cartCountEl) cartCountEl.textContent = cart.reduce((sum,p)=>sum+p.quantity,0);
+    if(wishlistCountEl) wishlistCountEl.textContent = wishlist.length;
+}
+
 
