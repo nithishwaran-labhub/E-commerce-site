@@ -17,9 +17,10 @@ header h1 {
     margin: 0;
 }
 
-button {
-    padding: 5px 10px;
-    cursor: pointer;
+header nav a {
+    color: white;
+    margin-left: 15px;
+    text-decoration: none;
 }
 
 .products {
@@ -45,6 +46,7 @@ button {
 }
 
 .product-card button {
-    margin-top: 5px;
+    margin: 5px 0;
+    padding: 5px 10px;
+    cursor: pointer;
 }
-
